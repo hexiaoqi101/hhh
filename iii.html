@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>极速生成</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            padding: 20px;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            text-align: center;
+            font-size: 32px;
+            margin: 30px 0;
+        }
+
+        .input-group {
+            margin-bottom: 15px;
+        }
+
+        input {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 16px;
+            margin-bottom: 10px;
+        }
+
+        .upload-btn {
+            display: block;
+            width: 100%;
+            padding: 12px;
+            background-color: #4a90e2;
+            color: white;
+            text-align: center;
+            border: none;
+            border-radius: 4px;
+            font-size: 16px;
+            cursor: pointer;
+            margin-bottom: 20px;
+        }
+
+        .generate-btn {
+            display: block;
+            width: 200px;
+            height: 200px;
+            margin: 30px auto;
+            background-color: #4a90e2;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            font-size: 24px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .generate-btn:hover {
+            background-color: #357abd;
+        }
+
+        #imagePreview {
+            max-width: 100%;
+            height: 200px;
+            margin: 10px auto;
+            display: none;
+            object-fit: contain;
+        }
+
+        #fileInput {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <h1>极速生成</h1>
+    <div class="input-group">
+        <input type="text" id="nameInput" placeholder="请输入姓名">
+        <input type="text" id="genderInput" placeholder="请输入性别">
+        <input type="text" id="ageInput" placeholder="请输入年龄">
+        <input type="text" id="idInput" placeholder="请输入证件号">
+        <input type="file" id="fileInput" accept="image/*">
+        <button class="upload-btn" onclick="document.getElementById('fileInput').click()">点击上传证件照</button>
+        <img id="imagePreview" alt="预览图">
+    </div>
+    <button class="generate-btn" onclick="generatePage()">开始生成</button>
+
+    <script>
+        // 图片转base64工具函数
+        function imageToBase64(file) {
+            return new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.onload = () => resolve(reader.result);
+                reader.onerror = error => reject(error);
+                reader.readAsDataURL(file);
+            });
+        }
+
+        let imageBase64Data = ''; // 存储图片的base64数据
+
+        // 加载模板文件
+        async function loadTemplate() {
+            try {
+                const response = await fetch('模板.html');
+                return await response.text();
+            } catch (error) {
+                console.error('加载模板失败:', error);
+                return null;
+            }
+        }
+
+        document.getElementById('fileInput').addEventListener('change', async function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                try {
+                    // 转换图片为base64
+                    imageBase64Data = await imageToBase64(file);
+                    
+                    // 显示预览
+                    const preview = document.getElementById('imagePreview');
+                    preview.src = imageBase64Data;
+                    preview.style.display = 'block';
+                } catch (error) {
+                    console.error('图片转换失败:', error);
+                }
+            }
+        });
+
+        // 生成页面
+        async function generatePage() {
+            // 获取输入值
+            const name = document.getElementById('nameInput').value;
+            const gender = document.getElementById('genderInput').value;
+            const age = document.getElementById('ageInput').value;
+            const idNumber = document.getElementById('idInput').value;
+
+            // 验证输入
+            if (!name || !gender || !age || !idNumber || !imageBase64Data) {
+                alert('请填写所有信息并上传证件照！');
+                return;
+            }
+
+            // 加载模板
+            const template = await loadTemplate();
+            if (!template) {
+                alert('加载模板失败！');
+                return;
+            }
+
+            // 替换模板中的变量
+            let newPage = template;
+            newPage = newPage.replace('<span class="f1">性别</span>', `<span class="f1">${gender}</span>`);
+            newPage = newPage.replace('<span class="f1">姓名</span>', `<span class="f1">${name}</span>`);
+            newPage = newPage.replace('<span class="f1">年龄</span>', `<span class="f1">${age}</span>`);
+            newPage = newPage.replace(/<span class="fc">编号：<\/span>[\s\S]*?<span class="f1">证件号<\/span>/, `<span class="fc">编号：</span><span class="f1">${idNumber}</span>`);
+            newPage = newPage.replace(/<span class="fc">身份证号：<\/span>[\s\S]*?<span class="f1">证件号<\/span>/, `<span class="fc">身份证号：</span><span class="f1">${idNumber}</span>`);
+            newPage = newPage.replace('src="证件照"', `src="${imageBase64Data}"`);
+
+            // 创建新窗口并显示生成的页面
+            const newWindow = window.open();
+            newWindow.document.write(newPage);
+            newWindow.document.close();
+        }
+    </script>
+</body>
+</html>
