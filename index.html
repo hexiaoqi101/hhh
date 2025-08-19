@@ -1,0 +1,92 @@
+// ... existing code ...
+// 加载模板文件
+async function loadTemplate() {
+    try {
+        const response = await fetch('模板.html');
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        const text = await response.text();
+        if (!text) {
+            throw new Error('模板文件内容为空');
+        }
+        return text;
+    } catch (error) {
+        console.error('加载模板失败:', error);
+        alert(`加载模板失败：${error.message}\n请确保模板文件存在且可访问！`);
+        return null;
+    }
+}
+
+// 生成页面
+async function generatePage() {
+    // 获取输入值
+    const name = document.getElementById('nameInput').value;
+    const age = document.getElementById('ageInput').value;
+    const idNumber = document.getElementById('idInput').value;
+
+    // 验证输入
+    if (!name || !age || !idNumber || !imageBase64Data) {
+        alert('请填写所有信息并上传证件照！');
+        return;
+    }
+
+    try {
+        // 加载模板
+        const template = await loadTemplate();
+        if (!template) {
+            return;
+        }
+
+        // 替换模板中的变量
+        let newPage = template;
+        newPage = newPage.replace('<span class="f1">性别</span>', `<span class="f1">${gender}</span>`);
+        newPage = newPage.replace('<span class="f1">姓名</span>', `<span class="f1">${name}</span>`);
+        newPage = newPage.replace('<span class="f1">年龄</span>', `<span class="f1">${age}</span>`);
+        // 替换编号和身份证号
+        newPage = newPage.replace(/<span class="fc">编号：<\/span>[\s\S]*?<span class="f1">证件号<\/span>/, `<span class="fc">编号：</span><span class="f1">${idNumber}</span>`);
+        newPage = newPage.replace(/<span class="fc">身份证号：<\/span>[\s\S]*?<span class="f1">证件号<\/span>/, `<span class="fc">身份证号：</span><span class="f1">${idNumber}</span>`);
+        newPage = newPage.replace('src="证件照"', `src="${imageBase64Data}"`);
+
+        // 创建预览容器
+        const previewContainer = document.createElement('div');
+        previewContainer.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.8);z-index:9999;display:flex;justify-content:center;align-items:center;';
+        
+        // 创建预览内容区域
+        const previewContent = document.createElement('div');
+        previewContent.style.cssText = 'background:white;width:90%;height:90%;position:relative;overflow:auto;padding:20px;border-radius:10px;';
+        
+        // 创建关闭按钮
+        const closeBtn = document.createElement('button');
+        closeBtn.textContent = '关闭预览';
+        closeBtn.style.cssText = 'position:absolute;top:10px;right:10px;padding:8px 16px;background:#4a90e2;color:white;border:none;border-radius:4px;cursor:pointer;';
+        closeBtn.onclick = () => document.body.removeChild(previewContainer);
+        
+        // 创建确认生成按钮
+        const confirmBtn = document.createElement('button');
+        confirmBtn.textContent = '确认生成';
+        confirmBtn.style.cssText = 'position:absolute;top:10px;right:100px;padding:8px 16px;background:#4CAF50;color:white;border:none;border-radius:4px;cursor:pointer;';
+        confirmBtn.onclick = () => {
+            document.body.removeChild(previewContainer);
+            // 创建新窗口并显示生成的页面
+            const newWindow = window.open();
+            if (newWindow) {
+                newWindow.document.write(newPage);
+                newWindow.document.close();
+            } else {
+                alert('无法打开新窗口，请检查浏览器是否阻止弹出窗口！');
+            }
+        };
+        
+        // 添加预览内容
+        previewContent.innerHTML = newPage;
+        previewContent.appendChild(closeBtn);
+        previewContent.appendChild(confirmBtn);
+        previewContainer.appendChild(previewContent);
+        document.body.appendChild(previewContainer);
+        
+    } catch (error) {
+        console.error('生成页面失败:', error);
+        alert(`生成页面失败：${error.message}`);
+    }
+}

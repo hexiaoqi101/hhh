@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>健康证明</title>
+        <style>
+            * {
+                box-sizing: border-box;
+                margin: 0;
+                padding: 0;
+                font-family: 'Microsoft YaHei', sans-serif;
+            }
+
+            .fc {
+                color: rgb(4,4,130);
+                font-weight: bold;
+                font-size: 14px;
+            }
+
+            .f1 {
+                color: #000;
+                font-weight: bold;
+                font-size: 14px;
+                text-decoration: none;
+            }
+
+            .dis {
+                display: flex;
+                justify-content: space-between;
+            }
+
+            .health-certificate {
+                background: #f8f8f8;
+                margin: 0 auto;
+                width: 414px;
+                padding: 20px 0;
+            }
+
+            .cert-card {
+                background: #fff;
+                margin: 0 20px 20px;
+                border: 2px solid #333;
+                border-radius: 14px;
+            }
+
+            .cert-header {
+                padding: 8px 0;
+                text-align: center;
+                font-size: 16px;
+                border-bottom: 2px solid rgb(48,42,155);
+            }
+
+            .cert-content {
+                position: relative;
+                z-index: 2;
+                padding: 0 20px;
+            }
+
+            .cert-info {
+                padding: 10px 0;
+            }
+
+            .cert-info-row {
+                margin-bottom: 10px;
+            }
+
+            .stamp-container {
+                position: absolute;
+                left: 150px;
+                bottom: 0;
+                z-index: 1;
+            }
+
+            .photo-container {
+                position: absolute;
+                right: 12px;
+                top: 10px;
+                z-index: 1;
+            }
+
+            .cert-footer {
+                width: 100%;
+                height: 2px;
+                background: rgb(48,42,155);
+                margin-bottom: 2px;
+            }
+
+            .issuer-info {
+                padding: 6px 0;
+                text-align: center;
+                font-size: 13px;
+                border-bottom: 2px solid rgb(48,42,155);
+                color: #fff;
+                background: rgb(41,45,153);
+                border-radius: 0 0 12px 12px;
+            }
+
+            .explanation-card {
+                background: #fff;
+                margin: 0 20px 20px;
+                border: 2px solid #333;
+                border-radius: 14px;
+            }
+
+            .explanation-content {
+                padding: 0 20px;
+            }
+
+            .explanation-section {
+                margin-bottom: 15px;
+            }
+
+            .explanation-title {
+                font-weight: bold;
+                margin-bottom: 5px;
+            }
+
+            .logo-qr-container {
+                width: 80px;
+                height: 80px;
+                background: transparent;
+                padding: 0px;
+                border: 0px solid #ddd;
+                margin-left: -8px;
+                margin-right: 8px;
+                position: relative;
+                top: -5px;
+            }
+
+            .qrcode-img {
+                width: 80px !important;
+                height: 80px !important;
+                image-rendering: -webkit-optimize-contrast;
+                image-rendering: crisp-edges;
+                image-rendering: pixelated;
+            }
+
+            .old-qr-container {
+                display: none;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="health-certificate">
+            <div class="cert-card">
+                <div class="cert-header fc">重庆市从业人员健康合格证明</div>
+                <div class="cert-content">
+                    <div class="cert-info">
+                        <div class="cert-info-row">
+                            <div class="dis" style="width:220px;">
+                                <div>
+                                    <span class="fc">工种：</span>
+                                    <span class="f1">食品卫生</span>
+                                </div>
+                                <div>
+                                    <span class="fc">性别：</span>
+                                    <span class="f1">性别</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="cert-info-row">
+                            <div class="dis" style="width:220px;">
+                                <div>
+                                    <span class="fc">姓名：</span>
+                                    <span class="f1">姓名</span>
+                                </div>
+                                <div>
+                                    <span class="fc">年龄：</span>
+                                    <span class="f1">年龄</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="cert-info-row">
+                            <div class="dis">
+                                <div>
+                                    <span class="fc">编号：</span>
+                                    <span class="f1">证件号</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div style="display:flex;">
+                        <!-- 二维码容器 -->
+                        <div class="logo-qr-container">
+                            <img class="qrcode-img" src="二维码" alt="高清二维码" style="width:80px;height:80px;">
+                        </div>
+                        <div style="display:flex;flex-direction: column;justify-content: space-around;margin-left:10px;">
+                            <div>
+                                <span class="fc">体检日期：</span>
+                                <span class="f1">2025-08-06</span>
+                            </div>
+                            <div>
+                                <span class="fc">有效期一年</span>
+                            </div>
+                            <div>
+                                <span class="fc">身份证号：</span>
+                                <span class="f1">证件号</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="stamp-container">
+                        <!-- 固定公章路径 -->
+                        <img src="https://www.chuanhuayun.top/12319.png" alt="公章" style="width:100px;height:auto">
+                    </div>
+                    <div class="photo-container">
+                       <img src="证件照" alt="照片" style="width:80px;height:auto">
+                    </div>
+                </div>
+                <div class="cert-footer"></div>
+                <div class="issuer-info">发证机构：垫江县桂阳社区卫生服务中心</div>
+            </div>
+            <div class="explanation-card">
+                <div class="cert-header fc">健康合格证说明</div>
+                <div class="explanation-content">
+                    <div class="explanation-section">
+                        <span class="fc">检查依据:</span>
+                        <span style="color:#000;font-size:12px">《中华人民共和国食品安全法》、《公共场所卫生管理条例实施细则》、《生活饮用水卫生监督管理办法》《化妆品卫生监督条例》、《中华人民共和国药品管理法》《消毒管理办法》等</span>
+                    </div>
+                    <div class="explanation-section">
+                        <span class="fc">适用范围:</span>
+                        <span style="color:#000;font-size:12px">食品生产经营、公共场所、医药销售、供管水、化妆品生产和消毒产品生产等从业人员。</span>
+                    </div>
+                    <div class="explanation-section">
+                        <div class="explanation-title fc">提示:</div>
+                        <div style="color:#000;font-size:12px">1、本证本市范围有效，请随身携带以备监督部门检查</div>
+                        <div style="color:#000;font-size:12px">2、再次体检换证请在本证期满前及时办理，过期无效</div>
+                    </div>
+                </div>
+                <div class="cert-footer"></div>
+                <div class="issuer-info" style="display:flex;justify-content: space-between;">
+                    <span></span>
+                    <span style="margin-right:10px;">垫江县桂阳社区卫生服务中心</span>
+                </div>
+            </div>
+        </div>
+    </body>
+</html>
