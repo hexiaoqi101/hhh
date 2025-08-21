@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>极速生成</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+            background-color: #fff;
+        }
+
+        h1 {
+            font-size: 36px;
+            margin: 50px 0 30px;
+        }
+
+        .login-container {
+            width: 100%;
+            max-width: 400px;
+            padding: 20px;
+        }
+
+        input {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 15px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 16px;
+            background-color: #f5f5f5;
+        }
+
+        .login-btn {
+            width: 100%;
+            padding: 12px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            font-size: 16px;
+            cursor: pointer;
+            margin-bottom: 10px;
+        }
+
+        .try-btn {
+            width: 100%;
+            padding: 12px;
+            background-color: #FF9800;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            font-size: 16px;
+            cursor: pointer;
+            margin-bottom: 15px;
+        }
+
+        .register-link {
+            text-align: center;
+            color: #666;
+            text-decoration: none;
+            font-size: 14px;
+            display: block;
+        }
+
+        .register-link:hover {
+            color: #333;
+        }
+    </style>
+</head>
+<body>
+    <h1>极速生成</h1>
+    <div class="login-container">
+        <input type="text" placeholder="账号" id="username">
+        <input type="password" placeholder="密码" id="password">
+        <button class="login-btn" onclick="login()">登录</button>
+        <button class="try-btn" onclick="tryFirst()">先使用</button>
+        <a href="#" class="register-link" onclick="register()">注册</a>
+    </div>
+
+    <script>
+        function login() {
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            
+            if (!username || !password) {
+                alert('请输入账号和密码');
+                return;
+            }
+            
+            // TODO: 实现登录逻辑
+            console.log('登录请求:', { username, password });
+        }
+
+        function tryFirst() {
+            // 跳转到主页面
+            window.location.href = 'iii.html';
+        }
+
+        function register() {
+            // TODO: 实现注册逻辑
+            alert('注册功能即将上线');
+        }
+    </script>
+</body>
+</html>

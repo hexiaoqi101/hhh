@@ -55,7 +55,7 @@
             display: block;
             width: 200px;
             height: 200px;
-            margin: 30px auto;
+            margin: 30px auto 5px;
             background-color: #4a90e2;
             color: white;
             border: none;
@@ -63,6 +63,13 @@
             font-size: 24px;
             cursor: pointer;
             transition: background-color 0.3s;
+        }
+
+        .price-text {
+            text-align: center;
+            color: #666;
+            font-size: 14px;
+            margin-bottom: 20px;
         }
 
         .generate-btn:hover {
@@ -94,6 +101,7 @@
         <img id="imagePreview" alt="预览图">
     </div>
     <button class="generate-btn" onclick="generatePage()">开始生成</button>
+    <div class="price-text">2元/次</div>
 
     <script>
         // 图片转base64工具函数
@@ -150,6 +158,12 @@
                 return;
             }
 
+            // 创建支付二维码（这里使用模拟数据，实际使用时需要对接真实支付接口）
+            const paymentResult = await showPaymentDialog();
+            if (!paymentResult) {
+                return; // 用户取消支付
+            }
+
             // 加载模板
             const template = await loadTemplate();
             if (!template) {
@@ -170,6 +184,68 @@
             const newWindow = window.open();
             newWindow.document.write(newPage);
             newWindow.document.close();
+        }
+
+        // 显示支付对话框
+        function showPaymentDialog() {
+            return new Promise((resolve) => {
+                const dialogHtml = `
+                    <div id="paymentDialog" style="
+                        position: fixed;
+                        top: 0;
+                        left: 0;
+                        right: 0;
+                        bottom: 0;
+                        background: rgba(0,0,0,0.5);
+                        display: flex;
+                        justify-content: center;
+                        align-items: center;
+                        z-index: 1000;
+                    ">
+                        <div style="
+                            background: white;
+                            padding: 20px;
+                            border-radius: 8px;
+                            text-align: center;
+                        ">
+                            <h3 style="margin-bottom: 15px;">支付2元生成费用</h3>
+                            <img src="https://example.com/qr-code.png" alt="支付二维码" style="
+                                width: 200px;
+                                height: 200px;
+                                margin-bottom: 15px;
+                            ">
+                            <div>
+                                <button onclick="confirmPayment(true)" style="
+                                    background: #4CAF50;
+                                    color: white;
+                                    border: none;
+                                    padding: 8px 16px;
+                                    margin-right: 10px;
+                                    border-radius: 4px;
+                                    cursor: pointer;
+                                ">已完成支付</button>
+                                <button onclick="confirmPayment(false)" style="
+                                    background: #f44336;
+                                    color: white;
+                                    border: none;
+                                    padding: 8px 16px;
+                                    border-radius: 4px;
+                                    cursor: pointer;
+                                ">取消支付</button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+
+                document.body.insertAdjacentHTML('beforeend', dialogHtml);
+
+                // 添加支付确认函数到全局作用域
+                window.confirmPayment = function(paid) {
+                    const dialog = document.getElementById('paymentDialog');
+                    dialog.remove();
+                    resolve(paid);
+                };
+            });
         }
     </script>
 </body>
